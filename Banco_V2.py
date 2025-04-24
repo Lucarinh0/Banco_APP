@@ -3,7 +3,6 @@ from datetime import datetime
 Limite = 500
 Opcao = 0
 cpf = 0
-Agencia = 0
 Numero_de_contas = 1
 Numero = 0
 
