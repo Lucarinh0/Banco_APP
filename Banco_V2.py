@@ -20,6 +20,8 @@ Contas = {
         "Saldo": 0,
         "Depositos": [],
         "Saques": [],
+        "Limite_De_Transacao": 0,
+        "Numero_De_Saque": 0
     }
 }
 
@@ -62,13 +64,9 @@ def Entrar_Conta():
         print(f"Número da conta: {numero} - Agência: {conta['Agencia']} - Saldo: R${conta['Saldo']:.2f}")
 
     Numero = int(input("Qual conta deseja entrar? "))
-    if Numero in contas_do_usuario:
-        if Numero not in Numero_De_Saque:
-            Numero_De_Saque[Numero] = 0
-        if Numero not in Limite_De_Transacao:
-            Limite_De_Transacao[Numero] = 0
-        print(f"Login na conta de número {Numero}\n")
-        while True:
+    print(f"Login na conta de número {Numero}\n")
+
+    while True:
             opcao = Menu()
             if opcao == 1:
                 valor = float(input("Valor para depósito: "))
@@ -100,6 +98,8 @@ def Registrar_Conta():
             "Saldo": 0,
             "Depositos": [],
             "Saques": [],
+            "Limite_De_Transacao": 0,
+            "Numero_De_Saque": 0
         }
         print("Conta registrada com sucesso.\n")
     else:
@@ -135,31 +135,35 @@ def Login():
 
 def Acao_Deposito(valor_depositado):
     global Numero
-    if valor_depositado > 0 and Limite_De_Transacao[Numero] < 10:
-        Contas[Numero]["Saldo"] += valor_depositado
+    conta = Contas[Numero]
+    if valor_depositado > 0 and conta["Limite_De_Transacao"] < 10:
+        conta["Saldo"] += valor_depositado
         data = datetime.now().strftime("%H:%M:%S da data %d/%m/%Y")
-        Limite_De_Transacao[Numero] += 1
-        Contas[Numero]["Depositos"].append(f'R${valor_depositado:.2f} às {data}')
+        conta["Limite_De_Transacao"] += 1
+        conta["Depositos"].append(f'R${valor_depositado:.2f} às {data}')
         print("Saldo depositado com sucesso!\n")
+    elif valor_depositado <= 0:
+        print("Depósito inválido\n")
+
     else:
-        print("Depósito inválido ou limite de transações atingido.\n")
+        print("Limite de transação diario atingido \n")
 
 def Acao_Saque(valor_sacado):
     global Numero
     conta = Contas[Numero]
-    if valor_sacado <= conta["Saldo"] and valor_sacado <= Limite and Numero_De_Saque[Numero] < 3 and Limite_De_Transacao[Numero] < 10:
+    if valor_sacado <= conta["Saldo"] and valor_sacado <= Limite and conta["Numero_De_Saque"] < 3 and conta["Limite_De_Transacao"] < 10:
         conta["Saldo"] -= valor_sacado
-        Numero_De_Saque[Numero] += 1
-        Limite_De_Transacao[Numero] += 1
+        conta["Numero_De_Saque"] += 1
+        conta["Limite_De_Transacao"] += 1
         data = datetime.now().strftime("%H:%M:%S da data %d/%m/%Y")
         conta["Saques"].append(f'R${valor_sacado:.2f} às {data}')
         print("Valor sacado com sucesso!")
         print("Retire o seu dinheiro na boca do caixa\n")
     elif valor_sacado > conta["Saldo"]:
         print("Saldo insuficiente.\n")
-    elif Numero_De_Saque[Numero] >= 3:
+    elif conta["Numero_De_Saque"] >= 3:
         print("Limite de saques diário atingido.\n")
-    elif Limite_De_Transacao[Numero] >= 10:
+    elif conta["Limite_De_Transacao"] >= 10:
         print("Limite de transações diário atingido.\n")
     else:
         print("Valor acima do limite permitido (R$500).\n")
