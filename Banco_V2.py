@@ -1,8 +1,6 @@
 from datetime import datetime
 
 Limite = 500
-Numero_De_Saque = {}
-Limite_De_Transacao = {}
 Opcao = 0
 cpf = 0
 Agencia = 0
@@ -51,7 +49,7 @@ def Menu_Contas():
     return Opcao
 
 def Entrar_Conta():
-    global Numero, Contas, Numero_De_Saque, Limite_De_Transacao, cpf
+    global Numero, Contas, cpf
     nome_logado = Usuarios[cpf]["Nome"]
     contas_do_usuario = {numero: conta for numero, conta in Contas.items() if conta["Usuario"] == nome_logado}
     
